@@ -4,7 +4,7 @@ emerge git
     #subversion will be added as a permanent useflag later on
     USE="subversion" emerge git
     #clone the repo
-    git clone git://github.com/oyvindkinsey/portage_overlay.git /usr/portage/local
+    git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/portage/local
 
     #update /etc/make.conf
     echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
