@@ -10,3 +10,5 @@
 =dev-ruby/eventmachine-0.12.10-r2 ~amd64
 =dev-ruby/IO-Reactor-1.0.4 ~amd64
 =dev-ruby/daemons-1.1.0 ~amd64
+=dev-ruby/rdiscount-1.6.5 ~amd64
+=dev-ruby/gemcutter-0.6.1 ~amd64
