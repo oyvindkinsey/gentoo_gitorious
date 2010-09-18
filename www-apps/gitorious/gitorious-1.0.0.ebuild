@@ -7,17 +7,17 @@ inherit eutils
 DESCRIPTION="Gitorious aims to provide a great way of doing distributed opensource code collaboration."
 
 HOMEPAGE="http://gitorious.org/gitorious"
-SRC_URI="http://adrenlinerush.net/package/${P}.tar.gz"
+SRC_URI="http://gitorious.org/gitorious/mainline/archive-tarball/master"
 LICENSE="AGPLv3"
 SLOT="0"
-KEYWORDS="amd64 ~ppc x86 ~x86-fbsd"
+KEYWORDS="amd64"
 IUSE="mysql"
 
 DEST_DIR="/var/www/gitorious/site/"
 HOME_DIR="/var/www/gitorious"
 USER="git"
 
-DEPEND=">=dev-util/git-1.6.3.3
+DEPEND=">=dev-vcs/git-1.6.4.4
 	>=app-misc/sphinx-0.9.8
 	>=dev-ruby/rails-2.3.5
 	>=dev-ruby/chronic-0.2.3
@@ -35,7 +35,7 @@ DEPEND=">=dev-util/git-1.6.3.3
 	>=dev-ruby/net-scp-1.0.2
 	>=dev-ruby/net-ssh-2.0.16
 	>=dev-ruby/oniguruma-1.1.0
-	>=www-misc/passenger-2.2.5
+	>=www-servers/nginx-0.7.65-r1
 	>=dev-ruby/rack-1.0.1
 	>=dev-ruby/rake-0.8.7
 	>=dev-ruby/raspell-1.1
@@ -50,8 +50,7 @@ DEPEND=">=dev-util/git-1.6.3.3
 	>=dev-ruby/ruby-hmac-0.3.2
 	>=dev-ruby/Ruby-MemCache-0.0.4
 	>=net-misc/memcached-1.4.1
-	>=www-servers/nginx-0.7.62[passenger,gitorious,ssl]
-	mysql? ( >=dev-db/mysql-5.0.84-r1 )"
+	mysql? ( >=dev-db/mysql-5.0 )"
 RDEPEND="${DEPEND}"
 
 pkg_setup() {
