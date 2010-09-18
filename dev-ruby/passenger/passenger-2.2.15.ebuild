@@ -14,3 +14,6 @@ SLOT="0"
 KEYWORDS="amd64 ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd"
 IUSE=""
 
+DEPEND=">=dev-ruby/rack-1.0.0
+	>=dev-ruby/rake-0.8.7"
+RDEPEND="${DEPEND}"

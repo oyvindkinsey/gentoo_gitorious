@@ -2,20 +2,20 @@
 #set this to your desired domain
 DOMAIN="git.brik.no"
 
-#echo Installing Gitorious and its dependencies..
+echo Installing Gitorious and its dependencies..
 
 #subversion will be added as a permanent useflag later on
-USE="subversion" emerge git
+USE="subversion -dso" emerge git
 echo clone the repo
 git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/portage/local
 
-if [ "$?" -ne "0" ]; then"
+if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
-echo "NGINX_MODULES_HTTP=\"passenger gzip rewrite gzip gzip_static memcached proxy\""
+echo "NGINX_MODULES_HTTP=\"passenger gzip rewrite gzip gzip_static memcached proxy\"" >> /etc/make.conf
 
 echo link to the provided keywords files
 mkdir /etc/portage/package.keywords -p
@@ -23,23 +23,23 @@ ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/porta
 
 emerge -av dev-db/mysql
 
-if [ "$?" -ne "0" ]; then"
+if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
 echo configure mysql - REMEMBER THE ROOT PASSWORD
 emerge --config dev-db/mysql
 
-if [ "$?" -ne "0" ]; then"
+if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
 /etc/init.d/mysql start
 
 echo you will at some point be asked by MySql to supply the root password - do so
-DOMAIN="${DOMAIN} emerge gitorious -av
+DOMAIN="${DOMAIN}" emerge gitorious -av
 
-if [ "$?" -ne "0" ]; then"
+if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
