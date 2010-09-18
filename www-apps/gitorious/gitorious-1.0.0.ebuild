@@ -34,6 +34,7 @@ DEPEND="dev-vcs/subversion[-dso]
 	>=dev-ruby/net-scp-1.0.2
 	>=dev-ruby/net-ssh-2.0.16
 	>=dev-ruby/oniguruma-1.1.0
+	>=dev-ruby/passenger-2.2.15
 	>=www-servers/nginx-0.7.65-r1
 	>=dev-ruby/json-1.4.3-r1
 	>=dev-ruby/rack-1.0.1
@@ -93,8 +94,8 @@ pkg_postinst() {
 	sed -i -e "s~git.localhost~${DOMAIN}~g" "${DEST_DIR}"config/gitorious.yml
 	sed -i -e "s~git.localhost~${DOMAIN}~g" /etc/nginx/nginx.conf
 
-	gem install passenger --no-ri --no-rdoc
 	cd "$(gem environment gemdir)"/gems/passenger*
+	#build the nginx module
 	rake nginx
 	cd -
 
