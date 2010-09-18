@@ -21,5 +21,5 @@ set up portage
 emerge
 -----
 
-    emerge gitorious -av
+    DOMAIN="git.mydomain.com" emerge gitorious -av
 

@@ -7,7 +7,8 @@ inherit eutils
 DESCRIPTION="Gitorious aims to provide a great way of doing distributed opensource code collaboration."
 
 HOMEPAGE="http://gitorious.org/gitorious"
-SRC_URI="http://gitorious.org/gitorious/mainline/archive-tarball/master"
+#SRC_URI="http://gitorious.org/gitorious/mainline/archive-tarball/master"
+SRC_URI="gitorious.tar.gz"
 LICENSE="AGPLv3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -29,13 +30,13 @@ DEPEND=">=dev-vcs/git-1.6.4.4
 	>=dev-ruby/geoip-0.8.6
 	>=dev-ruby/highline-1.5.1
 	>=dev-ruby/hoe-2.4.0
-	>=dev-ruby/json_pure-1.2.0
 	>=dev-ruby/macaddr-1.0.0
 	>=dev-ruby/mime-types-1.16
 	>=dev-ruby/net-scp-1.0.2
 	>=dev-ruby/net-ssh-2.0.16
 	>=dev-ruby/oniguruma-1.1.0
 	>=www-servers/nginx-0.7.65-r1
+	>=dev-ruby/json-1.4.3-r1
 	>=dev-ruby/rack-1.0.1
 	>=dev-ruby/rake-0.8.7
 	>=dev-ruby/raspell-1.1
@@ -54,6 +55,11 @@ DEPEND=">=dev-vcs/git-1.6.4.4
 RDEPEND="${DEPEND}"
 
 pkg_setup() {
+	if [[ -z "${DOMAIN}" ]] ; then
+		die "Please set DOMAIN"
+	fi
+	einfo "Installing gitorious for the domain ${DOMAIN}"
+
 	ebegin "Creating gitorious user and group"
 	enewgroup ${USER}
 	enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron,crontab"
@@ -64,7 +70,7 @@ src_unpack() {
 	unpack ${A}
 }
 
-src_install() {
+	src_install() {
 	insinto "${DEST_DIR}"
 	doins -r .
 }
@@ -77,8 +83,16 @@ pkg_postinst() {
 	cp "${FILESDIR}"/createdb.sql  "${DEST_DIR}"config/
 	cp "${FILESDIR}"/production.conf  "${DEST_DIR}"config/ultrasphinx/
 	cp -r "${FILESDIR}"/cert /etc/nginx
+	cp "${FILESDIR}"/nginx.conf  /etc/nginx/nginx.conf
+
 	cp "${FILESDIR}"/.bashrc /var/www/gitorious
-	
+
+	#set the correct host name
+	sed -i -e "s~git.localhost~${DOMAIN}~g" "${DEST_DIR}"config/gitorious.yml
+	sed -i -e "s~git.localhost~${DOMAIN}~g" /etc/nginx/nginx.conf
+	PASSENGER_ROOT=`passenger-config --root`
+	sed -i -e "s~PASSENGER_ROOT~${PASSENGER_ROOT}~g" /etc/nginx/nginx.conf
+		
 	chmod -R 770 "${DEST_DIR}"script
 	
 	cd "${DEST_DIR}"
@@ -88,7 +102,8 @@ pkg_postinst() {
 	"${DEST_DIR}"config/cookie_secret.sh
 		
 	if use mysql ; then
-		mysql < "${FILESDIR}"/createdb.sql
+		echo "We will now create the needed database and user"
+		mysql -uroot -p < "${FILESDIR}"/createdb.sql
 		
 		cd "${DEST_DIR}"
 		RAILS_ENV="production" rake db:migrate
