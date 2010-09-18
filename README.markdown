@@ -18,9 +18,17 @@ set up portage
     ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
     ln -s /usr/portage/local/profiles/package.use/gitorious.use /etc/portage/package.use/
 
-emerge
------
+emerge mysql
+------------
 
+    emerge -av dev-db/mysql
+    #configure mysql - REMEMBER THE ROOT PASSWORD
+    emerge --config dev-db/mysql
+    /etc/init.d/mysql start
+
+emerge gitorious
+----------------
+    #you will at some point be asked by MySql to supply the root password - do so
     DOMAIN="git.mydomain.com" emerge gitorious -av
 
 start it up
