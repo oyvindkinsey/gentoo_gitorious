@@ -1,24 +1,23 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-servers/nginx/nginx-0.7.62.ebuild,v 1.3 2009/09/18 19:22:29 keytoaster Exp $
-
+EAPI=2
 inherit eutils 
 
 DESCRIPTION="Gitorious aims to provide a great way of doing distributed opensource code collaboration."
 
 HOMEPAGE="http://gitorious.org/gitorious"
-#SRC_URI="http://gitorious.org/gitorious/mainline/archive-tarball/master"
-SRC_URI="gitorious.tar.gz"
+SRC_URI="http://gitorious.org/gitorious/mainline/archive-tarball/master -> gitorious-master.tar.gz"
 LICENSE="AGPLv3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="mysql"
 
 DEST_DIR="/var/www/gitorious/site/"
 HOME_DIR="/var/www/gitorious"
 USER="git"
 
-DEPEND=">=dev-vcs/git-1.6.4.4
+DEPEND="dev-vcs/subversion[-dso]
+	>=dev-vcs/git-1.6.4.4[subversion]
 	>=app-misc/sphinx-0.9.8
 	>=dev-ruby/rails-2.3.5
 	>=dev-ruby/chronic-0.2.3
@@ -51,7 +50,7 @@ DEPEND=">=dev-vcs/git-1.6.4.4
 	>=dev-ruby/ruby-hmac-0.3.2
 	>=dev-ruby/Ruby-MemCache-0.0.4
 	>=net-misc/memcached-1.4.1
-	mysql? ( >=dev-db/mysql-5.0 )"
+	>=dev-db/mysql-5.0"
 RDEPEND="${DEPEND}"
 
 pkg_setup() {
@@ -70,7 +69,11 @@ src_unpack() {
 	unpack ${A}
 }
 
-	src_install() {
+src_prepare() {
+	mv "${WORKDIR}"/gitorious-mainline/* "${WORKDIR}"
+}
+
+src_install() {
 	insinto "${DEST_DIR}"
 	doins -r .
 }
@@ -84,13 +87,18 @@ pkg_postinst() {
 	cp "${FILESDIR}"/production.conf  "${DEST_DIR}"config/ultrasphinx/
 	cp -r "${FILESDIR}"/cert /etc/nginx
 	cp "${FILESDIR}"/nginx.conf  /etc/nginx/nginx.conf
-
 	cp "${FILESDIR}"/.bashrc /var/www/gitorious
 
 	#set the correct host name
 	sed -i -e "s~git.localhost~${DOMAIN}~g" "${DEST_DIR}"config/gitorious.yml
 	sed -i -e "s~git.localhost~${DOMAIN}~g" /etc/nginx/nginx.conf
-	PASSENGER_ROOT=`passenger-config --root`
+
+	gem install passenger --no-ri --no-rdoc
+	cd "$(gem environment gemdir)"/gems/passenger*
+	rake nginx
+	cd -
+
+	PASSENGER_ROOT= "$(passenger-config --root)"
 	sed -i -e "s~PASSENGER_ROOT~${PASSENGER_ROOT}~g" /etc/nginx/nginx.conf
 		
 	chmod -R 770 "${DEST_DIR}"script
@@ -101,13 +109,12 @@ pkg_postinst() {
 	cp "${FILESDIR}"/cookie_secret.sh  "${DEST_DIR}"config/
 	"${DEST_DIR}"config/cookie_secret.sh
 		
-	if use mysql ; then
-		echo "We will now create the needed database and user"
-		mysql -uroot -p < "${FILESDIR}"/createdb.sql
+	echo "We will now create the needed database and user"
+	echo "Please supply your mysql root password at the prompt"
+	mysql -uroot -p < "${FILESDIR}"/createdb.sql
 		
-		cd "${DEST_DIR}"
-		RAILS_ENV="production" rake db:migrate
-	fi
+	cd "${DEST_DIR}"
+	RAILS_ENV="production" rake db:migrate
 	
 	crontab -u git "${FILESDIR}"/crontab
 	
