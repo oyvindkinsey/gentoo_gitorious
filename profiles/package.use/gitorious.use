@@ -1,0 +1,4 @@
+app-portage/layman git subversion
+dev-vcs/subversion -dso
+dev-vcs/git subversion
+www-apps/gitorious mysql
