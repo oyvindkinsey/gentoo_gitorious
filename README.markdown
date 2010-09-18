@@ -8,7 +8,7 @@ emerge git
 
     #update /etc/make.conf
     echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
-    echo "NGINX_MODULES_HTTP=\"passenger\""
+    echo "NGINX_MODULES_HTTP=\"passenger gzip rewrite gzip gzip_static memcached proxy\""
 
 set up portage
 -------------
