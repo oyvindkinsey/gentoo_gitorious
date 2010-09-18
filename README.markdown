@@ -23,3 +23,18 @@ emerge
 
     DOMAIN="git.mydomain.com" emerge gitorious -av
 
+start it up
+-----------
+    
+    rc-update add mysql default
+    rc-update add memcached default
+    rc-update add stompserver default
+    rc-update add nginx default
+
+    /etc/init.d/mysql start
+    /etc/init.d/memcached start
+    /etc/init.d/stompserver start
+    /etc/init.d/nginx start
+
+
+And your done!
