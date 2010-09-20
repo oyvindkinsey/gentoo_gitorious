@@ -24,22 +24,6 @@ echo link to the provided keywords files
 mkdir /etc/portage/package.keywords -p
 ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
 
-emerge -av dev-db/mysql
-
-if [ "$?" -ne "0" ]; then
-  exit 1
-fi
-
-echo configure mysql - REMEMBER THE ROOT PASSWORD
-emerge --config dev-db/mysql
-
-if [ "$?" -ne "0" ]; then
-  exit 1
-fi
-
-/etc/init.d/mysql start
-
-echo you will at some point be asked by MySql to supply the root password - do so
 DOMAIN="${DOMAIN}" emerge gitorious -av
 
 if [ "$?" -ne "0" ]; then

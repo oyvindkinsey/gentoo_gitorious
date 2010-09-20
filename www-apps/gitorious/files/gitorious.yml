@@ -10,3 +10,5 @@ production:
   is_gitorious_dot_org: false
   mangle_email_addresses: true
   public_mode: true
+  gitorious_support_email: support@localhost
+  exception_notification_emails: support@localhost
