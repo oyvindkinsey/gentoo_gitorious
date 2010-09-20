@@ -12,13 +12,11 @@ emerge git
 
 set up portage
 -------------
+    mkdir /etc/portage
     #set the needed use flags
     echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
-    
-    #link to the provided .use and .keywords files
-    #you could also append the content of the file to your existing one
-    mkdir /etc/portage/package.keywords
-    ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
+    #set the needed keywords
+    cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 emerge gitorious
 ----------------

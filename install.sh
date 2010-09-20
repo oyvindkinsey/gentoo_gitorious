@@ -19,9 +19,11 @@ fi
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
 
-echo link to the provided keywords files
-mkdir /etc/portage/package.keywords -p
-ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
+mkdir /etc/portage
+#set the needed use flags
+echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
+#set the needed keywords
+cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 DOMAIN="${DOMAIN}" emerge gitorious -av
 
