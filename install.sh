@@ -18,7 +18,6 @@ fi
 
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
-echo "NGINX_MODULES_HTTP=\"passenger gzip rewrite gzip gzip_static memcached proxy\"" >> /etc/make.conf
 
 echo link to the provided keywords files
 mkdir /etc/portage/package.keywords -p

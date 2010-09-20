@@ -8,27 +8,20 @@ emerge git
 
     #update /etc/make.conf
     echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
-    echo "NGINX_MODULES_HTTP=\"passenger gzip rewrite gzip gzip_static memcached proxy\""
+
 
 set up portage
 -------------
+    #set the needed use flags
+    echo "www-server/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/packages.use
     
     #link to the provided .use and .keywords files
     #you could also append the content of the file to your existing one
     mkdir /etc/portage/package.keywords
     ln -s /usr/portage/local/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
 
-emerge mysql
-------------
-
-    emerge -av dev-db/mysql
-    #configure mysql - REMEMBER THE ROOT PASSWORD
-    emerge --config dev-db/mysql
-    /etc/init.d/mysql start
-
 emerge gitorious
 ----------------
-    #you will at some point be asked by MySql to supply the root password - do so
     DOMAIN="git.mydomain.com" emerge gitorious -av
 
 start it up
