@@ -13,7 +13,7 @@ emerge git
 set up portage
 -------------
     #set the needed use flags
-    echo "www-server/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/packages.use
+    echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
     
     #link to the provided .use and .keywords files
     #you could also append the content of the file to your existing one
