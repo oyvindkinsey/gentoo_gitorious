@@ -1,0 +1,34 @@
+#!/sbin/runscript
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: /var/cvsroot/gentoo-x86/dev-vcs/git/files/git-daemon.initd,v 1.1 2010/03/17 15:13:27 sping Exp $
+
+PIDFILE=/var/run/git-daemon.pid
+
+depend() {
+        need net
+        use logger
+}
+
+start() {
+        [ -e /lib/librc.so ] || BL1_COMPAT="--name git-daemon"
+        ebegin "Starting"
+	einfo "Starting git-daemon"
+		cd /var/www/gitorious/site && RAILS_ENV="production" script/git-daemon -d
+	eend $?
+	einfo "Starting poller"
+		cd /var/www/gitorious/site && RAILS_ENV="production" script/poller start
+        eend $?
+}
+
+stop() {
+        ebegin "Stopping"
+	einfo "Not implemented"
+        eend $?
+}
+
+
+
+#@reboot   cd /var/www/gitorious/site && RAILS_ENV="production" script/git-daemon -d
+#@reboot   cd /var/www/gitorious/site && RAILS_ENV="production" script/poller start
+#@reboot   cd /var/www/gitorious/site && RAILS_ENV="production" /usr/bin/rake ultrasphinx:daemon:start

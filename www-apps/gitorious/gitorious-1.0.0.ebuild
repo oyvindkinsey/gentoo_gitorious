@@ -34,7 +34,6 @@ DEPEND="dev-vcs/subversion[-dso]
 	>=dev-ruby/net-scp-1.0.2
 	>=dev-ruby/net-ssh-2.0.16
 	>=dev-ruby/oniguruma-1.1.0
-	>=dev-ruby/passenger-2.2.15
 	>=www-servers/nginx-0.7.65-r1
 	>=dev-ruby/json-1.4.3-r1
 	>=dev-ruby/rack-1.0.1
@@ -89,17 +88,22 @@ pkg_postinst() {
 	cp -r "${FILESDIR}"/cert /etc/nginx
 	cp "${FILESDIR}"/nginx.conf  /etc/nginx/nginx.conf
 	cp "${FILESDIR}"/.bashrc /var/www/gitorious
+	cp "${FILESDIR}"/gitorious-poller /etc/init.d/
+	cp "${FILESDIR}"/gitorious-git-daemon /etc/init.d/
+	cp "${FILESDIR}"/poller  "${DEST_DIR}"script/poller
+	cp "${FILESDIR}"/run-git-daemon  "${DEST_DIR}"script/run-git-daemon
+	
 
 	#set the correct host name
 	sed -i -e "s~git.localhost~${DOMAIN}~g" "${DEST_DIR}"config/gitorious.yml
 	sed -i -e "s~git.localhost~${DOMAIN}~g" /etc/nginx/nginx.conf
 
-	cd "$(gem environment gemdir)"/gems/passenger*
+	cd "$(echo gem environment gemdir)"/gems/passenger*
 	#build the nginx module
 	rake nginx
 	cd -
 
-	PASSENGER_ROOT= "$(passenger-config --root)"
+	PASSENGER_ROOT= `passenger-config --root`
 	sed -i -e "s~PASSENGER_ROOT~${PASSENGER_ROOT}~g" /etc/nginx/nginx.conf
 		
 	chmod -R 770 "${DEST_DIR}"script
@@ -135,17 +139,7 @@ pkg_postinst() {
 	chmod 744 "${HOME_DIR}"/site/data/hooks/pre*
 	chmod 744 "${HOME_DIR}"/site/data/hooks/post*
 	
-	echo "If you haven't initialed mysql you will need to."
-	echo "# /usr/bin/mysql_install_db"
-	echo
-	echo "If mysql was not running durring install you will need to create"
-	echo "the database and run rake."
-	echo "# mysql < /var/www/gitorious/site/config/createdb.sql"
-	echo "# cd /var/www/gitorious/site"
-	echo "# RAILS_ENV=\"production\" rake db:migrate"
-	echo "# RAILS_ENV=\"production\" rake ultraphinx:configure"
-	echo
-	echo "Services need to be started are: mysql, nginx, memcahced, stompserver"
+	echo "Services need to be started are: nginx, memcached, stompserver"
 	echo "You can either restart or manually start what is in the crontab."
 	echo
 	echo "You will need to add git.local to /etc/hosts to run as is or create dns entries and edit the gitorious.yml and nginx.conf accordingly"
