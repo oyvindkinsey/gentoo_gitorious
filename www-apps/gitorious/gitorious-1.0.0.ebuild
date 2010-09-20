@@ -93,7 +93,6 @@ pkg_postinst() {
 	cp "${FILESDIR}"/poller  "${DEST_DIR}"script/poller
 	cp "${FILESDIR}"/run-git-daemon  "${DEST_DIR}"script/run-git-daemon
 	
-
 	#set the correct host name
 	sed -i -e "s~git.localhost~${DOMAIN}~g" "${DEST_DIR}"config/gitorious.yml
 	sed -i -e "s~git.localhost~${DOMAIN}~g" /etc/nginx/nginx.conf

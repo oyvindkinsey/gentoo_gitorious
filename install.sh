@@ -1,8 +1,11 @@
 #!/bin/bash
-#set this to your desired domain
-DOMAIN="git.brik.no"
+#
+# NOTE: This script is only if you want an *almost* fully automated setup. 
+#
 
-echo Installing Gitorious and its dependencies..
+DOMAIN=`hostname -f`
+
+echo "Installing gitorious on domain: ${DOMAIN}"
 
 #subversion will be added as a permanent useflag later on
 USE="subversion -dso" emerge git

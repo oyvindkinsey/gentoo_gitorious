@@ -9,13 +9,13 @@ GIT_USER="git"
 GIT_GROUP="git"
 
 start() {
-        ebegin "Starting Gitorious git-daemon"
+        ebegin "Starting Gitorious poller"
 	${GIT_DAEMON} start ${GIT_USER} ${GIT_GROUP}
         eend $? "Failed to start Gitorious git-daemon"
 }
 
 stop() {
-        ebegin "Shutting down Gitorious git-daemon"
+        ebegin "Shutting down Gitorious poller"
 	${GIT_DAEMON} stop ${GIT_USER} ${GIT_GROUP}
         eend $?
 }
