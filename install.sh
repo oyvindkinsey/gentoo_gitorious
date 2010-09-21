@@ -3,9 +3,6 @@
 # NOTE: This script is only if you want an *almost* fully automated setup. 
 #
 
-DOMAIN=`hostname -f`
-echo "Installing gitorious on domain: ${DOMAIN}"
-
 mkdir /etc/portage
 
 #set the needed use flags
@@ -27,7 +24,7 @@ fi
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
 
-DOMAIN="${DOMAIN}" emerge gitorious
+emerge gitorious
 
 if [ "$?" -ne "0" ]; then
   exit 1
