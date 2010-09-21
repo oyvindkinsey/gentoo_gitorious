@@ -9,8 +9,6 @@ mkdir /etc/portage
 echo "dev-vcs/git -perl" >> /etc/portage/package.use
 echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
 
-#set the needed keywords
-cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 emerge git
 
@@ -24,7 +22,10 @@ fi
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
 
+#set the needed keywords
+
 emerge gitorious
+cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 if [ "$?" -ne "0" ]; then
   exit 1

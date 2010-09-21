@@ -6,14 +6,15 @@ set up portage
     echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
     echo "dev-vcs/git -perl" >> /etc/portage/package.use
 
-    #set the needed keywords
-    cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
     #clone the repo
     git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/portage/local
 
     #update /etc/make.conf
     echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
+
+    #set the needed keywords
+    cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 emerge gitorious
 ----------------
