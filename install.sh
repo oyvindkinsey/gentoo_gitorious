@@ -23,9 +23,9 @@ echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
 
 #set the needed keywords
+cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 emerge gitorious
-cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
 
 if [ "$?" -ne "0" ]; then
   exit 1
