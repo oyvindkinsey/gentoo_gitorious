@@ -88,7 +88,6 @@ pkg_postinst() {
         cp "${FILESDIR}"/.bashrc /var/www/gitorious
         cp "${FILESDIR}"/gitorious-poller /etc/init.d/
         cp "${FILESDIR}"/gitorious-git-daemon /etc/init.d/
-        cp "${FILESDIR}"/poller "${DEST_DIR}"script/poller
         cp "${FILESDIR}"/run-git-daemon  "${DEST_DIR}"script/run-git-daemon
         chmod -R 770 "${DEST_DIR}"script
 

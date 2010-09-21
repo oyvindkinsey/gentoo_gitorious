@@ -3,20 +3,18 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-ruby/stompserver/files/stompserver,v 1.1 2009/03/25 17:02:32 caleb Exp $
 
-PIDFILE=/var/run/git-daemon.pid
 GIT_DAEMON="/var/www/gitorious/site/script/poller"
 GIT_USER="git"
-GIT_GROUP="git"
 
 start() {
         ebegin "Starting Gitorious poller"
-	${GIT_DAEMON} start ${GIT_USER} ${GIT_GROUP}
+        su - ${GIT_USER} -c "${GIT_DAEMON} start"
         eend $? "Failed to start Gitorious git-daemon"
 }
 
 stop() {
         ebegin "Shutting down Gitorious poller"
-	${GIT_DAEMON} stop ${GIT_USER} ${GIT_GROUP}
+        su - ${GIT_USER} -c "${GIT_DAEMON} stop"
         eend $?
 }
 
