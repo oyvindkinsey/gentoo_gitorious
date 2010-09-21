@@ -31,6 +31,18 @@ if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
+emerge --config dev-db/mysql
+if [ "$?" -ne "0" ]; then
+  exit 1
+fi
+
+/etc/init.d/mysql start
+
+emerge --config gitorious
+if [ "$?" -ne "0" ]; then
+  exit 1
+fi
+
 rc-update add mysql default
 rc-update add memcached default
 rc-update add stompserver default
