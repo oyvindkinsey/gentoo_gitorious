@@ -17,8 +17,7 @@ DEST_DIR="/var/www/gitorious/site/"
 HOME_DIR="/var/www/gitorious"
 USER="git"
 
-DEPEND="dev-vcs/subversion[-dso]
-	>=dev-vcs/git-1.6.4.4[subversion]
+DEPEND=">=dev-vcs/git-1.6.4.4
 	>=app-misc/sphinx-0.9.8
 	>=dev-ruby/rails-2.3.5
 	>=dev-ruby/chronic-0.2.3

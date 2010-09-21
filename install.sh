@@ -4,12 +4,20 @@
 #
 
 DOMAIN=`hostname -f`
-
 echo "Installing gitorious on domain: ${DOMAIN}"
 
-#subversion will be added as a permanent useflag later on
-USE="subversion -dso" emerge git
-echo clone the repo
+mkdir /etc/portage
+
+#set the needed use flags
+echo "dev-vcs/git -perl" >> /etc/portage/package.use
+echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
+
+#set the needed keywords
+cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
+
+emerge git
+
+echo cloning the repo
 git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/portage/local
 
 if [ "$?" -ne "0" ]; then
@@ -19,13 +27,7 @@ fi
 echo update /etc/make.conf
 echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
 
-mkdir /etc/portage
-#set the needed use flags
-echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
-#set the needed keywords
-cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
-
-DOMAIN="${DOMAIN}" emerge gitorious -av
+DOMAIN="${DOMAIN}" emerge gitorious
 
 if [ "$?" -ne "0" ]; then
   exit 1
