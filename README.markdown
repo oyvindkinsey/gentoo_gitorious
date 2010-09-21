@@ -17,7 +17,11 @@ set up portage
 
 emerge gitorious
 ----------------
-    DOMAIN="git.mydomain.com" emerge gitorious -av
+    emerge gitorious -av
+
+configure gitorious
+------------------
+    emerge --config gitorious
 
 start it up
 -----------
