@@ -3,18 +3,26 @@ set up portage
     mkdir /etc/portage
 
     #set the needed use flags
-    echo "www-servers/nginx nginx_modules_http_passenger nginx_modules_http_proxy nginx_modules_http_rewrite nginx_modules_http_gzip" >> /etc/portage/package.use
-    echo "dev-vcs/git -perl" >> /etc/portage/package.use
-
+    grep -qF 'NGINX_MODULES_HTTP' /etc/make.conf \
+    && sed -i -e 's:NGINX_MODULES_HTTP=":NGINX_MODULES_HTTP="\n\tpassenger proxy rewrite gzip :g' /etc/make.conf \
+    || echo -e "NGINX_MODULES_HTTP=\"passenger proxy rewrite gzip \\\\\n\t\"" >> /etc/make.conf
 
     #clone the repo
-    git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/portage/local
+    mkdir -p /usr/local/overlays
+    git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/local/overlays
 
     #update /etc/make.conf
-    echo "PORTDIR_OVERLAY=\"/usr/portage/local\"" >> /etc/make.conf
+    grep -qF 'PORTDIR_OVERLAY="' /etc/make.conf \
+    && sed -i -e 's:PORTDIR_OVERLAY=":PORTDIR_OVERLAY=" \\\n\t/usr/local/overlays/gentoo_gitorious \\\n:g' /etc/make.conf \
+    || echo -e "PORTDIR_OVERLAY=\" \\\\\n\t/usr/local/overlays/gentoo_gitorious \\\\\n\t\"" >> /etc/make.conf
 
     #set the needed keywords
-    cat /usr/portage/local/profiles/package.keywords/gitorious.keywords >> /etc/portage/package.keywords
+    test -f /etc/portage/package.keywords \
+    && mv /etc/portage/package.keywords /etc/portage/unmod_list \
+    && mkdir -p /etc/portage/package.keywords \
+    && mv /etc/portage/unmod_list /etc/portage/package.keywords/unmod_list
+    mkdir -p /etc/portage/package.keywords
+    cp /usr/local/overlays/gentoo_gitorious/profiles/package.keywords/gitorious.keywords /etc/portage/package.keywords/
 
 emerge gitorious
 ----------------
