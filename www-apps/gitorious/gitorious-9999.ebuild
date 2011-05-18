@@ -17,7 +17,7 @@ DEST_DIR="/var/www/gitorious/site/"
 HOME_DIR="/var/www/gitorious"
 USER="git"
 
-DEPEND=">=dev-vcs/git-1.6.4.4
+DEPEND=">=dev-vcs/git-1.6.4.4[-perl]
 	>=app-misc/sphinx-0.9.8
 	>=dev-ruby/rails-2.3.5
 	>=dev-ruby/chronic-0.2.3
@@ -50,7 +50,8 @@ DEPEND=">=dev-vcs/git-1.6.4.4
 	>=dev-ruby/ruby-hmac-0.3.2
 	>=dev-ruby/Ruby-MemCache-0.0.4
 	>=net-misc/memcached-1.4.1
-	>=dev-db/mysql-5.0"
+	virtual/cron
+	>=virtual/mysql-5.0"
 RDEPEND="${DEPEND}"
 
 pkg_nofetch()
@@ -62,7 +63,11 @@ pkg_nofetch()
 pkg_setup() {
 	ebegin "Creating gitorious user and group"
 	enewgroup ${USER}
-	enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron,crontab"
+	if has_version sys-process/fcron ; then
+		enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron"
+	else
+		enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron,crontab"
+	fi
 	eend ${?}
 }
 
@@ -72,7 +77,7 @@ src_unpack() {
 
 src_install() {
 	insinto "${DEST_DIR}"
-	doins -r .
+	doins -r . || die "Something went wrong at copying."
 }
 
 pkg_postinst() {
@@ -101,6 +106,7 @@ pkg_config() {
         # check if mysql is running and configured
         if ! ps ax | grep -v grep | grep "mysql" > /dev/null; then
                 einfo "MySql is not running."
+                einfo "And don't forget configuring it. ;-)"
                 exit 1
         fi
 
