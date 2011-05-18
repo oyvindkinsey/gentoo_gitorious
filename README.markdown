@@ -1,3 +1,6 @@
+Unfortunately, support for *passenger* in Nginx has been removed from Gentoo's main portage tree.
+Therefore you will have to fetch another overlay to this one, which contains suitable ebuilds for Nginx.
+
 set up portage
 -------------
     mkdir /etc/portage
@@ -7,14 +10,15 @@ set up portage
     && sed -i -e 's:NGINX_MODULES_HTTP=":NGINX_MODULES_HTTP="\n\tpassenger proxy rewrite gzip :g' /etc/make.conf \
     || echo -e "NGINX_MODULES_HTTP=\"passenger proxy rewrite gzip \\\\\n\t\"" >> /etc/make.conf
 
-    #clone the repo
+    #clone this repo and Mark's overlay with the Nginx ebuilds
     mkdir -p /usr/local/overlays
     git clone git://github.com/oyvindkinsey/gentoo_gitorious.git /usr/local/overlays
+    git clone git://github.com/wmark/ossdl-overlay.git /usr/local/overlays
 
     #update /etc/make.conf
     grep -qF 'PORTDIR_OVERLAY="' /etc/make.conf \
-    && sed -i -e 's:PORTDIR_OVERLAY=":PORTDIR_OVERLAY=" \\\n\t/usr/local/overlays/gentoo_gitorious \\\n:g' /etc/make.conf \
-    || echo -e "PORTDIR_OVERLAY=\" \\\\\n\t/usr/local/overlays/gentoo_gitorious \\\\\n\t\"" >> /etc/make.conf
+    && sed -i -e 's:PORTDIR_OVERLAY=":PORTDIR_OVERLAY=" \\\n\t/usr/local/overlays/gentoo_gitorious \\\n\t/usr/local/overlays/ossdl-overlay \\\n:g' /etc/make.conf \
+    || echo -e "PORTDIR_OVERLAY=\" \\\\\n\t/usr/local/overlays/gentoo_gitorious \\\\\n\t/usr/local/overlays/ossdl-overlay \\\\\n\t\"" >> /etc/make.conf
 
     #set the needed keywords
     test -f /etc/portage/package.keywords \
