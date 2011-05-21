@@ -1,14 +1,25 @@
-=www-apache/passenger-2.2.15 ~amd64
+=dev-ruby/actionmailer-2*
+=dev-ruby/actionpack-2*
+=dev-ruby/activerecord-2*
+=dev-ruby/activeresource-2*
+=dev-ruby/activesupport-2*
+dev-ruby/bundler
+=dev-ruby/daemons-1.1.0 ~amd64
+=dev-ruby/eventmachine-0.12.10-r2 ~amd64
+=dev-ruby/gemcutter-0.6.1 ~amd64
+dev-ruby/i18n
+=dev-ruby/IO-Reactor-1.0.4 ~amd64
 =dev-ruby/mime-types-1.16-r2 ~amd64
 =dev-ruby/oniguruma-1.1.0 ~amd64
 =dev-ruby/oniguruma-1.1.0-r2 ~amd64
-=www-servers/nginx-0.7.65-r1 ~amd64
-=dev-ruby/Ruby-MemCache-0.0.4 ~amd64
-=dev-ruby/stompserver-0.9.9-r1 ~amd64
-=dev-ruby/ruby-hmac-0.4.0 ~amd64
-=dev-ruby/ruby-yadis-0.3.4-r1 ~amd64
-=dev-ruby/eventmachine-0.12.10-r2 ~amd64
-=dev-ruby/IO-Reactor-1.0.4 ~amd64
-=dev-ruby/daemons-1.1.0 ~amd64
+dev-ruby/racc
+dev-ruby/rack
+=dev-ruby/rails-2.3*
 =dev-ruby/rdiscount-1.6.5 ~amd64
-=dev-ruby/gemcutter-0.6.1 ~amd64
+=dev-ruby/ruby-hmac-0.4.0 ~amd64
+=dev-ruby/Ruby-MemCache-0.0.4 ~amd64
+=dev-ruby/ruby-yadis-0.3.4-r1 ~amd64
+=dev-ruby/stompserver-0.9.9-r1 ~amd64
+dev-ruby/tmail
+=www-apache/passenger-2.2.15 ~amd64
+=www-servers/nginx-0.7.65-r1 ~amd64

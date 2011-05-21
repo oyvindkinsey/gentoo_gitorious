@@ -20,13 +20,14 @@ RESTRICT="bindist"
 
 DEPEND=">=dev-vcs/git-1.6.4.4[-perl]
 	>=app-misc/sphinx-0.9.8
-	>=dev-ruby/rails-2.3.5
+	>=dev-ruby/rails-2.3.8
 	>=dev-ruby/chronic-0.2.3
 	>=dev-ruby/daemons-1.0.10
 	>=dev-ruby/diff-lcs-1.1.2
 	>=dev-ruby/echoe-4.0
 	dev-ruby/bundler
 	>=net-libs/apache-activemq-5.2.0
+	>=dev-ruby/activesupport-2.3.8
 	>=dev-ruby/eventmachine-0.12.10
 	>=dev-ruby/fastthread-1.0.7
 	>=dev-ruby/geoip-0.8.6
@@ -54,6 +55,7 @@ DEPEND=">=dev-vcs/git-1.6.4.4[-perl]
 	>=dev-ruby/Ruby-MemCache-0.0.4
 	>=net-misc/memcached-1.4.1
 	virtual/cron
+	dev-libs/libyaml
 	>=virtual/mysql-5.0"
 RDEPEND="${DEPEND}"
 
@@ -77,6 +79,10 @@ pkg_setup() {
 
 src_unpack() { 
 	git_src_unpack 
+}
+
+src_prepare() {
+	epatch "${FILESDIR}/Rakefile-Mutex.patch"
 }
 
 src_install() {
@@ -133,7 +139,8 @@ pkg_config() {
 
         ebegin "install the required gems"
         cd "${ROOT}${DEST_DIR}"
-        RAILS_ENV="production" rake gems:install || die "Oops, gems:install failed"
+        wget http://binhost.ossdl.de/distfiles/gitorious-vendor-cache-20110521.tar.xz -O - | tar -xa
+        RAILS_ENV="production" bundle --local install || die "Oops, install failed"
 
         ebegin "generate a cookie secret"
         "${ROOT}${DEST_DIR}"config/cookie_secret.sh
@@ -144,7 +151,7 @@ pkg_config() {
         mysql -uroot -p < "${ROOT}${DEST_DIR}"/config/createdb.sql
 
         cd "${ROOT}${DEST_DIR}"
-        RAILS_ENV="production" rake db:migrate || die "Oops, db:migrate failed"
+        RAILS_ENV="production" bundle exec rake db:create:all || die "Oops, db:migrate failed"
 
         ebegin "add the crontab which runs ultrasphinx (should be converted to a daemon)"
         crontab -u git "${ROOT}${DEST_DIR}"/crontab
