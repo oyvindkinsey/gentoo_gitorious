@@ -131,25 +131,25 @@ pkg_config() {
         sed -i -e "s~support@localhost~${EMAIL}~g" "${ROOT}"/var/www/gitorious/site/config/gitorious.yml
         echo "Make sure sendmail is working (check the mailhub setting in /etc/ssmtp/ssmtp.conf if you are using SSMTP)."
 
-        # install the required gems
+        ebegin "install the required gems"
         cd "${ROOT}${DEST_DIR}"
-        RAILS_ENV="production" rake gems:install
+        RAILS_ENV="production" rake gems:install || die "Oops, gems:install failed"
 
-        # generate a cookie secret
+        ebegin "generate a cookie secret"
         "${ROOT}${DEST_DIR}"config/cookie_secret.sh
 
-        # set up the database
+        ebegin "set up the database"
         echo "We will now create the needed database and user"
         echo "Please supply your mysql root password at the prompt"
         mysql -uroot -p < "${ROOT}${DEST_DIR}"/config/createdb.sql
 
         cd "${ROOT}${DEST_DIR}"
-        RAILS_ENV="production" rake db:migrate
+        RAILS_ENV="production" rake db:migrate || die "Oops, db:migrate failed"
 
-        # add the crontab which runs ultrasphinx (should be converted to a daemon)
+        ebegin "add the crontab which runs ultrasphinx (should be converted to a daemon)"
         crontab -u git "${ROOT}${DEST_DIR}"/crontab
 
-        # set up needed directories and files
+        ebegin "set up needed directories and files"
         mkdir "${ROOT}${HOME_DIR}"/tmp
         mkdir "${ROOT}${HOME_DIR}"/tarballs
         mkdir "${ROOT}${HOME_DIR}"/repositories
@@ -158,7 +158,7 @@ pkg_config() {
         mkdir "${ROOT}${HOME_DIR}"/.ssh
         touch "${ROOT}${HOME_DIR}"/.ssh/authorized_keys
 
-        RAILS_ENV="production" rake ultrasphinx:configure
+        RAILS_ENV="production" rake ultrasphinx:configure || die "Oops, ultrasphinx:configure failed"
 
         chown -R git:git "${ROOT}${HOME_DIR}"
         chmod 700 "${ROOT}${HOME_DIR}"/.ssh
@@ -166,7 +166,7 @@ pkg_config() {
         chmod 744 "${ROOT}${HOME_DIR}"/site/data/hooks/pre*
         chmod 744 "${ROOT}${HOME_DIR}"/site/data/hooks/post*
 
-        echo "Services need to be started are: nginx, memcached, stompserver, gitorious-git-daemon and gitorious-poller"
+        einfo "Services need to be started are: nginx, memcached, stompserver, gitorious-git-daemon and gitorious-poller"
 
 }
 
