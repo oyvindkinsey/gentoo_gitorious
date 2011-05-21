@@ -1,7 +1,7 @@
 # Copyright 1999-2009 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-servers/nginx/nginx-0.7.62.ebuild,v 1.3 2009/09/18 19:22:29 keytoaster Exp $
-EAPI=2
+EAPI=4
 
 DESCRIPTION="Gitorious aims to provide a great way of doing distributed opensource code collaboration."
 
@@ -16,6 +16,7 @@ inherit git
 DEST_DIR="/var/www/gitorious/site/"
 HOME_DIR="/var/www/gitorious"
 USER="git"
+RESTRICT="bindist"
 
 DEPEND=">=dev-vcs/git-1.6.4.4[-perl]
 	>=app-misc/sphinx-0.9.8
@@ -24,6 +25,8 @@ DEPEND=">=dev-vcs/git-1.6.4.4[-perl]
 	>=dev-ruby/daemons-1.0.10
 	>=dev-ruby/diff-lcs-1.1.2
 	>=dev-ruby/echoe-4.0
+	dev-ruby/bundler
+	>=net-libs/apache-activemq-5.2.0
 	>=dev-ruby/eventmachine-0.12.10
 	>=dev-ruby/fastthread-1.0.7
 	>=dev-ruby/geoip-0.8.6
@@ -61,12 +64,13 @@ pkg_nofetch()
 }
 
 pkg_setup() {
-	ebegin "Creating gitorious user and group"
-	enewgroup ${USER}
+	USER=${USER:-"git"}
+	ebegin "Creating gitorious user and group (${USER})"
+	enewgroup "${USER}"
 	if has_version sys-process/fcron ; then
-		enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron"
+		enewuser "${USER}" -1 /bin/bash ${HOME_DIR} "${USER},cron"
 	else
-		enewuser ${USER} -1 /bin/bash ${HOME_DIR} ${USER}",cron,crontab"
+		enewuser "${USER}" -1 /bin/bash ${HOME_DIR} "${USER},cron,crontab"
 	fi
 	eend ${?}
 }
