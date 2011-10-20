@@ -13,17 +13,17 @@ depend() {
 start() {
         [ -e /lib/librc.so ] || BL1_COMPAT="--name git-daemon"
         ebegin "Starting"
-	einfo "Starting git-daemon"
-		cd /var/www/gitorious/site && RAILS_ENV="production" script/git-daemon -d
+
+	einfo "Starting thin"
+		cd /var/www/gitorious/site && bundle exec thin start -C thin.yml	
 	eend $?
-	einfo "Starting poller"
-		cd /var/www/gitorious/site && RAILS_ENV="production" script/poller start
-        eend $?
 }
 
 stop() {
         ebegin "Stopping"
-	einfo "Not implemented"
+	einfo "Stopping thin"
+                cd /var/www/gitorious/site && bundle exec thin stop -C thin.yml
+        eend $?
         eend $?
 }
 
