@@ -20,7 +20,7 @@ USER="git"
 DEPEND=">=dev-vcs/git-1.6.4.4
 	dev-ruby/stompserver
 	>=dev-lang/ruby-1.8.7[threads]
-	>=app-misc/sphinx-0.9.8
+	>=app-misc/sphinx-0.9.8[mysql]
 	dev-ruby/bundler
 	>=www-servers/nginx-0.7.65-r1[nginx_modules_http_proxy,nginx_modules_http_rewrite,nginx_modules_http_gzip]
 	>=net-misc/memcached-1.4.1
@@ -112,7 +112,12 @@ pkg_config() {
         mysql -uroot -p < "${ROOT}${DEST_DIR}"/config/createdb.sql
 
         cd "${ROOT}${DEST_DIR}"
+	bundle exec rake db:create RAILS_ENV=production
         bundle exec rake db:migrate RAILS_ENV=production
+	
+	bundle exec rake ultrasphinx:configure RAILS_ENV=production
+	sed -i -e "s~base_tags~tags~g" "${ROOT}${DEST_DIR}"/config/ultrasphinx/production.conf
+	bundle exec rake ultrasphinx:index RAILS_ENV=production
 
         # add the crontab which runs ultrasphinx (should be converted to a daemon)
         crontab -u git "${ROOT}${DEST_DIR}"/crontab
@@ -125,8 +130,6 @@ pkg_config() {
         mkdir "${ROOT}${HOME_DIR}"/site/tmp/pids
         mkdir "${ROOT}${HOME_DIR}"/.ssh
         touch "${ROOT}${HOME_DIR}"/.ssh/authorized_keys
-
-        RAILS_ENV="production" rake ultrasphinx:configure
 
 	echo "We will now create the Gitorious admin user"
 	RAILS_ENV=production ruby script/create_admin

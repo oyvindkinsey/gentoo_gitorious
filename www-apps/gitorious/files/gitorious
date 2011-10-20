@@ -17,6 +17,8 @@ start() {
 	einfo "Starting thin"
 		cd /var/www/gitorious/site && bundle exec thin start -C thin.yml	
 	eend $?
+
+	cd /var/www/gitorious/site && bundle exec rake ultrasphinx:daemon:start RAILS_ENV=production"
 }
 
 stop() {
@@ -24,7 +26,7 @@ stop() {
 	einfo "Stopping thin"
                 cd /var/www/gitorious/site && bundle exec thin stop -C thin.yml
         eend $?
-        eend $?
+	cd /var/www/gitorious/site && bundle exec rake ultrasphinx:daemon:stop RAILS_ENV=production"
 }
 
 
